@@ -9,6 +9,7 @@ from mmcv.cnn import Conv2d
 from mmcv.ops import point_sample
 from mmengine.model import ModuleList, caffe2_xavier_init
 from mmengine.structures import InstanceData
+from mmengine.config import Config
 from torch import Tensor
 
 from mmdet.registry import MODELS, TASK_UTILS
@@ -96,6 +97,12 @@ class Mask2FormerHead(MaskFormerHead):
                  init_cfg: OptMultiConfig = None,
                  **kwargs) -> None:
         super(AnchorFreeHead, self).__init__(init_cfg=init_cfg)
+        if type(pixel_decoder) is dict:
+            pixel_decoder = Config(pixel_decoder)
+        if type(transformer_decoder) is dict:
+            transformer_decoder = Config(transformer_decoder)
+        if type(loss_cls) is dict:
+            loss_cls = Config(loss_cls)
         self.num_things_classes = num_things_classes
         self.num_stuff_classes = num_stuff_classes
         self.num_classes = self.num_things_classes + self.num_stuff_classes
